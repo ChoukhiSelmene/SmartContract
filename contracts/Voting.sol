@@ -51,6 +51,11 @@ contract Voting is Ownable(msg.sender) {
         emit WorkflowStatusChange(WorkflowStatus.RegisteringVoters, currentWorkflowStatus);
     }
 
+    function stopRegisteringProposals() public onlyOwner{            
+        setWorkflowStatus(WorkflowStatus.ProposalsRegistrationEnded);
+        emit WorkflowStatusChange(WorkflowStatus.ProposalsRegistrationStarted, currentWorkflowStatus);
+    }
+
     function beginVotingSession() public onlyOwner{
         setWorkflowStatus(WorkflowStatus.VotingSessionStarted);
         emit WorkflowStatusChange(WorkflowStatus.ProposalsRegistrationStarted, currentWorkflowStatus);

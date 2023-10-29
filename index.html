@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Voting front-end</title>
+    <script language="javascript" type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script language="javascript" type="text/javascript" src="scripts/Voting_abi.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .warning-box {
+            width: 300px;
+            background-color: #ce181874;
+            border-radius: 5px;
+            box-shadow: -10px 10px 0px rgba(0, 0, 0, .1);
+            padding: 10px;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .warning-text {
+            font-weight: bold;
+            color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        var voting;
+        var userAccount;
+
+        function startApp() {
+            var votingAddress = "YOUR_CONTRACT_ADDRESS";
+            voting = new web3js.eth.Contract(votingABI, cryptoZombiesAddress);
+            var accountInterval = setInterval(function () {
+
+                if (web3.eth.accounts[0] !== userAccount) {
+                    userAccount = web3.eth.accounts[0];
+
+                    getZombiesByOwner(userAccount)
+                    .then(displayZombies);
+                }
+            }, 100);
+        }
+
+        window.addEventListener('load', function () {
+            // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+            if (typeof web3 !== 'undefined') {
+                // Use Mist/MetaMask's provider
+                web3js = new Web3(web3.currentProvider);
+            } else {
+                // Crée un div contenant la classe "warning-box"
+                const warningBox = document.createElement('div');
+                warningBox.classList.add('warning-box');
+
+                // Crée un élément p pour le texte principal
+                const warningText = document.createElement('p');
+                warningText.classList.add('warning-text');
+                warningText.textContent = 'Installation de MetaMask requise';
+
+                // Crée un autre élément p pour le message
+                const message = document.createElement('p');
+                message.textContent = "Pour utiliser cette application, veuillez installer l'extension MetaMask pour votre navigateur.";
+
+                // Crée un lien avec l'URL de téléchargement
+                const metamaskLink = document.createElement('a');
+                metamaskLink.href = 'https://metamask.io/';
+                metamaskLink.target = '_blank';
+                metamaskLink.textContent = 'Téléchargez MetaMask depuis https://metamask.io/';
+
+                // Ajoute les éléments créés au div "warning-box"
+                warningBox.appendChild(warningText);
+                warningBox.appendChild(message);
+                warningBox.appendChild(metamaskLink);
+
+                // Sélectionnez l'élément de la page où vous souhaitez ajouter la "warning-box" (par exemple, le body)
+                const container = document.body;
+
+                // Ajoute le "warning-box" au conteneur
+                container.appendChild(warningBox);
+            }
+
+            // Now you can start your app & access web3js freely:
+            startApp()
+
+        })
+    </script>
+</body>
+
+</html>
